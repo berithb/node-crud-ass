@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createOrder, getOrder, getOrderId, UpdateOrder, deleteOrder } from '../controllers/order.controller';
+import { createOrder, getOrders, getOrderById, updateOrder, deleteOrder } from '../controllers/order.controller';
 
 const Orouter = Router();
 
@@ -88,7 +88,7 @@ Orouter.post('/', createOrder);
  *               items:
  *                 $ref: '#/components/schemas/Order'
  */
-Orouter.get('/', getOrder);
+Orouter.get('/', getOrders);
 
 /**
  * @swagger
@@ -113,7 +113,7 @@ Orouter.get('/', getOrder);
  *       404:
  *         description: Order not found
  */
-Orouter.get('/:id', getOrderId);
+Orouter.get('/:id', getOrderById);
 
 /**
  * @swagger
@@ -149,7 +149,7 @@ Orouter.get('/:id', getOrderId);
  *       404:
  *         description: Order not found
  */
-Orouter.put('/:id', UpdateOrder);
+Orouter.put('/:id', updateOrder);
 
 /**
  * @swagger
