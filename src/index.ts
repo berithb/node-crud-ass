@@ -36,6 +36,6 @@ app.use("/api/auth", authRouter);
 app.use('/api/password', Prouter); 
 app.use('/api/order', Orouter);
 app.listen(PORT, () =>{
-  console.log('server is running on port ${PORT}');
+  console.log(`server is running on port ${PORT}`);
 
 });

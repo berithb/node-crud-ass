@@ -12,7 +12,7 @@ const Orouter = Router();
 
 /**
  * @swagger
- * /orders:
+ * /api/order:
  *   post:
  *     summary: Create a new order
  *     tags: [Orders]
