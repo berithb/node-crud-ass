@@ -7,7 +7,7 @@ const authRouter = Router();
  * @swagger
  * tags:
  *   name: Auth
- *   description: Authentication APIs
+ *   description: User authentication
  */
 
 /**
@@ -22,7 +22,6 @@ const authRouter = Router();
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name, email, password]
  *             properties:
  *               name:
  *                 type: string
@@ -30,11 +29,19 @@ const authRouter = Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               role:
+ *                 type: string
+ *             required:
+ *               - name
+ *               - email
+ *               - password
  *     responses:
  *       201:
  *         description: User registered successfully
  *       400:
- *         description: Invalid input
+ *         description: Missing required fields
+ *       409:
+ *         description: Email already exists
  */
 authRouter.post("/register", registerUser);
 
@@ -50,19 +57,22 @@ authRouter.post("/register", registerUser);
  *         application/json:
  *           schema:
  *             type: object
- *             required: [email, password]
  *             properties:
  *               email:
  *                 type: string
  *               password:
  *                 type: string
+ *             required:
+ *               - email
+ *               - password
  *     responses:
  *       200:
  *         description: Login successful
+ *       400:
+ *         description: Missing email or password
  *       401:
- *         description: Invalid credentials
+ *         description: Invalid email or password
  */
 authRouter.post("/login", loginUser);
-
 
 export default authRouter;
