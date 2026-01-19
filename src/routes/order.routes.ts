@@ -52,7 +52,7 @@ const Orouter = Router();
 
 /**
  * @swagger
- * /orders:
+ * /api/orders:
  *   post:
  *     summary: Create a new order
  *     tags: [Orders]
@@ -74,7 +74,7 @@ Orouter.post('/', createOrder);
 
 /**
  * @swagger
- * /orders:
+ * /api/orders:
  *   get:
  *     summary: Get all orders
  *     tags: [Orders]
@@ -92,7 +92,7 @@ Orouter.get('/', getOrder);
 
 /**
  * @swagger
- * /orders/{id}:
+ * /api/orders/{id}:
  *   get:
  *     summary: Get an order by ID
  *     tags: [Orders]
@@ -117,7 +117,7 @@ Orouter.get('/:id', getOrderId);
 
 /**
  * @swagger
- * /orders/{id}:
+ * /api/orders/{id}:
  *   put:
  *     summary: Update an order
  *     tags: [Orders]
@@ -153,7 +153,7 @@ Orouter.put('/:id', UpdateOrder);
 
 /**
  * @swagger
- * /orders/{id}:
+ * /api/orders/{id}:
  *   delete:
  *     summary: Delete an order
  *     tags: [Orders]
