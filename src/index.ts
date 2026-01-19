@@ -11,6 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
 
 import dotenv from 'dotenv';
+import Orouter from './routes/order.routes';
 
 
 
@@ -32,8 +33,8 @@ app.use('/api', router);
 app.use('/api/products', productrouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
-// app.use("/api/password", Prouter);
-app.use('/api/password', Prouter); // ✅ FIXED
+app.use('/api/password', Prouter); 
+app.use('/api/order', Orouter);
 app.listen(PORT, () =>{
   console.log('server is running on port ${PORT}');
 
