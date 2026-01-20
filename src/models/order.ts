@@ -1,45 +1,45 @@
-import mongoose, { Schema, Document} from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
-export interface Iorder extends Document{
-    userId: string;
-    products :{
-        productId: string,
-        quantity: number
-    }[];
-    totalAmount: number;
-    status: 'pending' | 'paid' | 'shipped' | 'canceded';
-    createdAt: Date;
+export interface OrderItem {
+  productId: mongoose.Types.ObjectId;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
-const orderSchema :Schema = new Schema({
-    userId:{
-        type: String,
-        required: true,
-    },
-    products:[
-    {
-        productId:{
-            type: String,
-            required: true
-        },
-        quantity:{
-            type:Number,
-            required:true,
-            min:1
-        },
-    },
-    ],
-        totalAmount:{
-            type: Number,
-            required:true
-        },
-        status:{
-            type: String,
-            enum: ['pending' , 'paid', 'shipped', 'cancelled'],
-            default :'pending',
+export interface Iorder extends Document {
+  userId: mongoose.Types.ObjectId;
+  items: OrderItem[];
+  totalAmount: number;
+  status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+}
 
-        },
-    
-}, {timestamps: true}
+const orderSchema: Schema = new Schema(
+  {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    items: [
+      {
+        productId: { type: Schema.Types.ObjectId, ref: "Product" },
+        name: String,
+        price: Number,
+        quantity: { type: Number, min: 1 },
+      },
+    ],
+    totalAmount: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+      default: "pending",
+    },
+  },
+  { timestamps: true }
 );
-export default mongoose.model<Iorder>('order', orderSchema);
+
+export default mongoose.model<Iorder>("Order", orderSchema);

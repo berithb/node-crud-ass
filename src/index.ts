@@ -11,7 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
 
 import dotenv from 'dotenv';
-import Orouter from './routes/order.router';
+import router from './routes/order.router';
 import cartRouter from './routes/cart.router';
 
 
@@ -35,7 +35,7 @@ app.use('/api/products', productrouter);
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 app.use('/api/password', Prouter); 
-app.use('/api/orders', Orouter);
+app.use('/api/orders', router);
 app.use('/api/cart', cartRouter );
 app.listen(PORT, () =>{
   console.log(`server is running on port ${PORT}`);
