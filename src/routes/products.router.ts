@@ -78,7 +78,7 @@ const productrouter = Router ();
 
 /**
  * @swagger
- * /products:
+ * /api/products:
  *   post:
  *     summary: Create a product
  *     tags: [Products]
@@ -100,10 +100,10 @@ const productrouter = Router ();
  *       500:
  *         description: Server error
  */
-
+productrouter.post('/', createProduct);
 /**
  * @swagger
- * /products:
+ * /api/products:
  *   get:
  *     summary: Get all products
  *     tags: [Products]
@@ -119,10 +119,10 @@ const productrouter = Router ();
  *       500:
  *         description: Server error
  */
-
+productrouter.get('/', getProducts);
 /**
  * @swagger
- * /products/{id}:
+ * /api/products/{id}:
  *   put:
  *     summary: Update a product
  *     tags: [Products]
@@ -147,10 +147,10 @@ const productrouter = Router ();
  *       500:
  *         description: Server error
  */
-
+productrouter.put('/:id', updateProduct);
 /**
  * @swagger
- * /products/{id}:
+ * /api/products/{id}:
  *   delete:
  *     summary: Delete a product
  *     tags: [Products]
@@ -170,9 +170,9 @@ const productrouter = Router ();
  *         description: Server error
  */
 
-productrouter.post('/', createProduct);
-productrouter.get('/', getProducts);
-productrouter.put('/:id', updateProduct);
 productrouter.delete('/:id', deleteProduct);
+
+
+
 
 export default productrouter;  

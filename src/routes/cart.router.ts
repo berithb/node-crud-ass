@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { protect } from "../middleware/auth.middleware";
 import {
   getCart,
   addItemToCart,
@@ -6,7 +7,7 @@ import {
   removeItemFromCart,
 } from "../controllers/cart.controller";
 
-const router = Router();
+const cartRouter = Router();
 
 /**
  * @swagger
@@ -70,10 +71,12 @@ const router = Router();
 
 /**
  * @swagger
- * /api/cart/{userId}:
+ * /cart/{userId}:
  *   get:
  *     summary: Get user cart
  *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -93,13 +96,16 @@ const router = Router();
  *       500:
  *         description: Server error
  */
+cartRouter.get("/:userId", protect, getCart);
 
 /**
  * @swagger
- * /api/cart/{userId}/items:
+ * /cart/{userId}/items:
  *   post:
  *     summary: Add item to cart
  *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -121,13 +127,16 @@ const router = Router();
  *       500:
  *         description: Server error
  */
+cartRouter.post("/:userId/items", protect, addItemToCart);
 
 /**
  * @swagger
- * /api/cart/{userId}/items/{itemId}:
+ * /cart/{userId}/items/{itemId}:
  *   put:
  *     summary: Update cart item quantity
  *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -155,13 +164,16 @@ const router = Router();
  *       500:
  *         description: Server error
  */
+cartRouter.put("/:userId/items/:itemId", protect, updateCartItem);
 
 /**
  * @swagger
- * /api/cart/{userId}/items/{itemId}:
+ * /cart/{userId}/items/{itemId}:
  *   delete:
  *     summary: Remove item from cart
  *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - name: userId
  *         in: path
@@ -183,11 +195,7 @@ const router = Router();
  *       500:
  *         description: Server error
  */
+cartRouter.delete("/:userId/items/:itemId", protect, removeItemFromCart);
 
+export default cartRouter;
 
-router.get("/cart/:userId", getCart);
-router.post("/cart/:userId/items", addItemToCart);
-router.put("/cart/:userId/items/:itemId", updateCartItem);
-router.delete("/cart/:userId/items/:itemId", removeItemFromCart);
-
-export default router;

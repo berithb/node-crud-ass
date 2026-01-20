@@ -1,8 +1,15 @@
 import { Router } from 'express';
-import { createcategories, getcategories,  getCategoryById,  updateCategory, deleteCategory} from "../controllers/category.controller";
+import {
+  createcategories,
+  getcategories,
+  getCategoryById,
+  updateCategory,
+  deleteCategory,
+} from '../controllers/category.controller';
 import { protect } from '../middleware/auth.middleware';
 import { restrictTo } from '../middleware/role.middleware';
-const router = Router();
+
+const categoryRouter = Router();
 
 /**
  * @swagger
@@ -39,7 +46,7 @@ const router = Router();
 
 /**
  * @swagger
- * /category:
+ * /categories:
  *   post:
  *     summary: Create a new category
  *     tags: [Categories]
@@ -74,10 +81,11 @@ const router = Router();
  *       403:
  *         description: Forbidden (Admin only)
  */
+categoryRouter.post('/', protect, restrictTo('admin'), createcategories);
 
 /**
  * @swagger
- * /category:
+ * /categories:
  *   get:
  *     summary: Get all categories
  *     tags: [Categories]
@@ -91,10 +99,11 @@ const router = Router();
  *               items:
  *                 $ref: '#/components/schemas/Category'
  */
+categoryRouter.get('/', getcategories);
 
 /**
  * @swagger
- * /category/{id}:
+ * /categories/{id}:
  *   get:
  *     summary: Get category by ID
  *     tags: [Categories]
@@ -115,10 +124,11 @@ const router = Router();
  *       404:
  *         description: Category not found
  */
+categoryRouter.get('/:id', getCategoryById);
 
 /**
  * @swagger
- * /category/{id}:
+ * /categories/{id}:
  *   put:
  *     summary: Update a category
  *     tags: [Categories]
@@ -154,10 +164,11 @@ const router = Router();
  *       404:
  *         description: Category not found
  */
+categoryRouter.put('/:id', protect, restrictTo('admin'), updateCategory);
 
 /**
  * @swagger
- * /category/{id}:
+ * /categories/{id}:
  *   delete:
  *     summary: Delete a category
  *     tags: [Categories]
@@ -180,14 +191,6 @@ const router = Router();
  *       404:
  *         description: Category not found
  */
+categoryRouter.delete('/:id', protect, restrictTo('admin'), deleteCategory);
 
-
-router.post('/category', protect,  restrictTo('admin'), createcategories);
-router.get ('/category', getcategories);
-router.get ('/category/:id', getCategoryById);
-router.put('/category/:id', updateCategory);
-router.delete('/category/:id', deleteCategory);
-
-
-
-export default router;
+export default categoryRouter;
