@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user";
+import { sendWelcomeEmail } from "../utils/emailService";
 
 // Generate JWT Token
 const generateToken = (userId: string) => {
@@ -23,8 +24,11 @@ export const registerUser = async (req: Request, res: Response) => {
       return res.status(409).json({ message: "Email already exists" });
     }
 
-    const newUser = new User({ name, email, password, role });
+    const newUser = new User({ name, email, password});
     await newUser.save();
+
+    // Send welcome email (async - don't wait for it)
+    sendWelcomeEmail(name, email);
 
     const token = generateToken(newUser._id.toString());
     const { password: _, ...userWithoutPassword } = newUser.toObject();

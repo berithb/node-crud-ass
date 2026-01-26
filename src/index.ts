@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
 import connectDB from './config/database';
 import categoryRouter from './routes/category.router';
@@ -10,14 +12,14 @@ import Prouter from './routes/password.router';
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
 
-import dotenv from 'dotenv';
+
 import router from './routes/order.router';
 import cartRouter from './routes/cart.router';
 
+import path from 'path';
 
 
 
-dotenv.config();
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -37,6 +39,7 @@ app.use("/api/auth", authRouter);
 app.use('/api/password', Prouter); 
 app.use('/api/orders', router);
 app.use('/api/cart', cartRouter );
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.listen(PORT, () =>{
   console.log(`server is running on port ${PORT}`);
 

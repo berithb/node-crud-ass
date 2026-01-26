@@ -67,7 +67,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/orders:
+ * /orders:
  *   post:
  *     summary: Create order from cart
  *     tags: [Orders]
@@ -85,7 +85,7 @@ router.post("/", protect, authorize("customer"), createOrder);
 
 /**
  * @swagger
- * /api/orders:
+ * /orders:
  *   get:
  *     summary: Get logged-in user's orders
  *     tags: [Orders]
@@ -99,7 +99,7 @@ router.get("/", protect, authorize("customer"), getMyOrders);
 
 /**
  * @swagger
- * /api/orders/{id}:
+ * /orders/{id}:
  *   get:
  *     summary: Get a single order (own order only)
  *     tags: [Orders]
@@ -123,7 +123,7 @@ router.get("/:id", protect, authorize("customer"), getOrderById);
 
 /**
  * @swagger
- * /api/orders/{id}/cancel:
+ * /orders/{id}/cancel:
  *   patch:
  *     summary: Cancel pending order
  *     tags: [Orders]
@@ -151,7 +151,7 @@ router.patch("/:id/cancel", protect, authorize("customer"), cancelOrder);
 
 /**
  * @swagger
- * /api/orders/admin/all:
+ * /orders/admin/all:
  *   get:
  *     summary: Get all orders (Admin only)
  *     tags: [Orders]
@@ -172,7 +172,7 @@ router.get(
 
 /**
  * @swagger
- * /api/orders/admin/{id}/status:
+ * /orders/admin/{id}/status:
  *   patch:
  *     summary: Update order status (Admin only)
  *     tags: [Orders]

@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { User, IUser } from "../models/user";
 import bcrypt from "bcryptjs";
+import { uploadToCloudinary } from "./upload.controller";
+import path from "path";
+import fs from "fs";
 
 // GET all users
 export const getUsers = async (req: Request, res: Response) => {
@@ -121,5 +124,44 @@ export const changePassword = async (req: any, res: Response) => {
     res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to change password", error });
+  }
+};
+
+export const uploadProfileImage = async (req: any, res: any) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      // Clean up uploaded file
+      if (req.file.path) fs.unlinkSync(req.file.path);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Delete old profile image if exists
+    if (user.profileImage && user.profileImage.startsWith("/uploads/")) {
+      const oldFilePath = path.join(process.cwd(), user.profileImage);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+
+    // Store file path (local storage or Cloudinary)
+    const profileImagePath = `/uploads/${req.file.filename}`;
+
+    user.profileImage = profileImagePath;
+    await user.save();
+
+    const { password: _, ...userWithoutPassword } = user.toObject();
+    res.status(200).json({ 
+      message: "Profile image uploaded successfully", 
+      user: userWithoutPassword 
+    });
+  } catch (error) {
+    // Clean up uploaded file on error
+    if (req.file.path) fs.unlinkSync(req.file.path);
+    res.status(500).json({ message: "Failed to upload profile image", error });
   }
 };

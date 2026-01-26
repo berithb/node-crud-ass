@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
+import { User, IUser } from "./user";
 
 export interface OrderItem {
   productId: mongoose.Types.ObjectId;
@@ -10,7 +11,11 @@ export interface OrderItem {
 export interface Iorder extends Document {
   userId: mongoose.Types.ObjectId;
   items: OrderItem[];
+   total: number;
   totalAmount: number;
+  trackingNumber?:string;
+  createdAt: Date;
+  updatedAt: Date;
   status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
 }
 
@@ -38,6 +43,8 @@ const orderSchema: Schema = new Schema(
       enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
+    trackingNumber: { type: String },
+    total: { type: Number, required: true },
   },
   { timestamps: true }
 );

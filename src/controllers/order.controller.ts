@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Order from "../models/order";
 import Cart from "../models/cart";
+import { User } from "../models/user";
+import { sendOrderConfirmationEmail, sendOrderStatusUpdateEmail } from "../utils/emailService";
 
 /**
  * CUSTOMER: Create order from cart
@@ -36,6 +38,18 @@ export const createOrder = async (req: any, res: Response) => {
     // Clear cart after order
     cart.items = [];
     await cart.save();
+
+    // Send order confirmation email (async - don't wait for it)
+    const user = await User.findById(userId);
+    if (user) {
+      sendOrderConfirmationEmail(
+        user.name,
+        user.email,
+        order._id.toString(),
+        totalAmount,
+        items
+      );
+    }
 
     res.status(201).json(order);
   } catch (error) {
@@ -111,7 +125,7 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Invalid status" });
   }
 
-  const order = await Order.findById(req.params.id);
+  const order = await Order.findById(req.params.id).populate("userId");
   if (!order) return res.status(404).json({ message: "Order not found" });
 
   if (order.status === "delivered") {
@@ -123,7 +137,13 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
   order.status = status;
   await order.save();
 
+  // Send order status update email (async - don't wait for it)
+  const user = order.userId as any;
+  if (user && user.email) {
+    sendOrderStatusUpdateEmail(user.name, user.email, order._id.toString(), status);
+  }
+
   res.json(order);
 };
 
- export default {createOrder, getMyOrders, getOrderById,cancelOrder ,getAllOrders, updateOrderStatus };
+export default { createOrder, getMyOrders, getOrderById, cancelOrder, getAllOrders, updateOrderStatus };

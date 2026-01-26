@@ -7,6 +7,9 @@ import {
   deleteUser,
 } from "../controllers/user.controller";
 import { protect, authorize } from "../middleware/auth.middleware";
+import { upload } from "../config/multer.config";
+import { uploadProfileImage } from "../controllers/user.controller";
+
 
 const userRouter = Router();
 
@@ -155,5 +158,56 @@ userRouter.put("/:id", protect, authorize("admin"), updateUser);
  *         description: User not found
  */
 userRouter.delete("/:id", protect, authorize("admin"), deleteUser);
+/**
+ * @swagger
+ * /users/profile/image:
+ *   post:
+ *     summary: Upload or update user profile image
+ *     tags:
+ *       - Users
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile image file (jpg, png, jpeg)
+ *     responses:
+ *       200:
+ *         description: Profile image uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Profile image uploaded successfully
+ *                 profileImage:
+ *                   type: string
+ *                   example: /uploads/profile/user-123.jpg
+ *       400:
+ *         description: No file uploaded
+ *       401:
+ *         description: Unauthorized (missing or invalid token)
+ *       500:
+ *         description: Server error
+ */
+
+userRouter.post(
+  "/profile/image",
+  protect,
+  upload.single("image"),
+  uploadProfileImage
+);
 
 export default userRouter;

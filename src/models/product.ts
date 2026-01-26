@@ -7,6 +7,7 @@ export interface Iproduct extends Document{
     categoryId: Schema.Types.ObjectId;
     Instock: boolean;
     quantity: number;
+    images: string[],
 
 }
 
@@ -16,6 +17,7 @@ const ProductSchema: Schema = new Schema ({
     description: String,
     categoryId: { type: Schema.Types.ObjectId, ref: 'category', required:true},
     Instock: {type:Boolean, required:true},
+    images: { type: [String], default: [] },
     quantity: { type: Number, default:0}
 
 }, {timestamps: true}

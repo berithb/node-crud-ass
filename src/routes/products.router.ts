@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { createProduct , getProducts, updateProduct, deleteProduct} from '../controllers/product.contoller';
-
+import { createProduct , getProducts, updateProduct, deleteProduct, uploadProductImage, deleteProductImage} from '../controllers/product.contoller';
+import { protect, authorize } from "../middleware/auth.middleware";
+import { upload } from "../config/multer.config";
 const productrouter = Router ();
 
 /**
@@ -172,7 +173,97 @@ productrouter.put('/:id', updateProduct);
 
 productrouter.delete('/:id', deleteProduct);
 
+/**
+ * @swagger
+ * /products/{id}/image:
+ *   post:
+ *     summary: Upload or update a product image
+ *     tags:
+ *       - Products
+ *     description: Uploads a single image for a product. Only accessible by Admin or Vendor.
+ *     security:
+ *       - bearerAuth: []
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the product
+ *       - in: formData
+ *         name: image
+ *         type: file
+ *         required: true
+ *         description: Image file to upload (max 1MB, images only)
+ *     responses:
+ *       200:
+ *         description: Image uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Product image uploaded successfully"
+ *                 imageUrl:
+ *                   type: string
+ *                   example: "https://yourcdn.com/products/12345.jpg"
+ *       400:
+ *         description: Bad request, e.g., file type not supported or file too large
+ *       401:
+ *         description: Unauthorized, user not logged in
+ *       403:
+ *         description: Forbidden, user is not Admin or Vendor
+ *       404:
+ *         description: Product not found
+ */
 
+productrouter.post("/:id/image", protect, authorize("admin", "vendor"), upload.single("image"), uploadProductImage);
 
+/**
+ * @swagger
+ * /products/{id}/image:
+ *   delete:
+ *     summary: Delete a product image
+ *     tags:
+ *       - Products
+ *     description: Deletes the image of a product. Only accessible by Admin or Vendor.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the product whose image will be deleted
+ *     responses:
+ *       200:
+ *         description: Product image deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Product image deleted successfully"
+ *       401:
+ *         description: Unauthorized, user not logged in
+ *       403:
+ *         description: Forbidden, user is not Admin or Vendor
+ *       404:
+ *         description: Product not found
+ */
+productrouter.delete("/:id/image", protect, authorize("admin", "vendor"), deleteProductImage);
 
 export default productrouter;  
