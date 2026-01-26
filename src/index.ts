@@ -29,6 +29,13 @@ const JWT_SECRET = process.env.JWT_SECRET;
 app.use(express.json());
 connectDB();
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "API is running 🚀",
+  });
+});
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
