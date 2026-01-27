@@ -27,7 +27,7 @@ const MONGO_URI= process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(express.json());
-connectDB();
+
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -47,6 +47,9 @@ app.use('/api/password', Prouter);
 app.use('/api/orders', router);
 app.use('/api/cart', cartRouter );
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+connectDB();
+
 app.listen(PORT, () =>{
   console.log(`server is running on port ${PORT}`);
 
